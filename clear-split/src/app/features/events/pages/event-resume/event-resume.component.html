@@ -1,0 +1,165 @@
+<!-- Participants Modal -->
+<div *ngIf="showParticipantsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg">
+    <h3 class="text-lg font-semibold mb-4 text-center">Participantes</h3>
+    <ul class="space-y-2 text-center">
+      <li *ngFor="let user of participants" class="text-sm">
+        <p> {{ user.name }} </p>
+      </li>
+    </ul>
+    <div class="text-center mt-4">
+      <button
+        class="px-4 py-2 text-sm rounded-xl bg-ios-blue text-white hover:bg-ios-blue/90"
+        (click)="closeParticipantsModal()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+<div class="min-h-screen p-4 bg-ios-bg dark:bg-dark-bg">
+  <div class="max-w-md mx-auto space-y-6">
+    <h2 class="text-xl font-semibold text-center">
+      {{ event?.title }}
+    </h2>
+    <div class="text-center mt-4">
+      <button
+        class="text-sm text-ios-blue font-medium underline"
+        (click)="openParticipantsModal()"
+      >
+        Ver participantes
+      </button>
+    </div>
+    <p *ngIf="expenses.length > 0" class="text-xl font-semibold text-center">
+      Total: <span class="text-ios-blue font-semibold">{{ totalAmount | formattedAmount }}</span>
+    </p>
+    <div *ngIf="expenses.length === 0" class="text-center text-ios-gray">
+      Aún no hay gastos cargados.
+    </div>
+
+    <ng-container *ngIf="!eventFinalized">
+      <div *ngFor="let expense of expenses" class="p-4 rounded-2xl bg-white dark:bg-dark-card shadow-sm">
+        <div class="flex justify-between items-center">
+          <div>
+            <h4 class="text-md font-medium">{{ expense.description }}</h4>
+            <p class="text-xs text-ios-gray">Por {{ createdByMap[expense.createdBy] || '—' }}</p>
+          </div>
+          <div class="text-right font-semibold text-ios-blue">
+            {{ expense.amount | formattedAmount }}
+          </div>
+          <a
+          *ngIf="expense.createdBy === currentUser?.id"
+            class="text-xs text-ios-blue ml-2 underline"
+            (click)="editExpense(expense)"
+          >
+            Editar
+        </a>
+        </div>
+        
+      </div>
+    </ng-container>
+
+    <div *ngIf="eventFinalized && debtSummary.length > 0" class="mt-8 space-y-4">
+      <h3 class="text-lg font-semibold text-center">Resumen de deudas</h3>
+
+      <div
+        *ngFor="let debt of debtSummary"
+        class="p-4 bg-white dark:bg-dark-card rounded-2xl shadow-card"
+      >
+        <p class="text-sm text-dark-text dark:text-white">
+          {{ debt.from.name }} le debe
+          <span class="font-semibold text-ios-blue">
+            {{ debt.amount | formattedAmount }}
+          </span>
+          a {{ debt.to.name }}
+        </p>
+        <div class="flex items-center gap-2 mt-1">
+          <p class="text-xs text-ios-gray">Alias: {{ debt.to.bankAlias }}</p>
+          <button
+            class="text-xs text-ios-blue underline"
+            (click)="copyToClipboard(debt.to.bankAlias)"
+          >
+            Copiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-6" *ngIf="eventFinalized">
+      <button
+        class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
+        (click)="reopenEvent()"
+      >
+        Reabrir evento
+      </button>
+    </div>
+
+    <div class="flex justify-between items-center mt-6" *ngIf="!eventFinalized">
+      <button
+        (click)="openModal()"
+        class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
+      >
+        + Agregar gasto
+      </button>
+
+      <button
+        *ngIf="isOwner"
+        (click)="finalizeEvent()"
+        class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
+      >
+        Finalizar evento
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg">
+    <h3 class="text-lg font-semibold mb-4 text-center">Nuevo gasto</h3>
+    <form [formGroup]="expenseForm" (ngSubmit)="saveExpense()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Descripción</label>
+        <input
+          type="text"
+          formControlName="description"
+          placeholder="Ej. Vacio, fernet, pan"
+          class="w-full px-3 py-2 border border-ios-border rounded-xl text-sm bg-ios-input dark:bg-dark-input focus:outline-none focus:ring-2 focus:ring-ios-blue"
+        />
+        <div *ngIf="expenseForm.get('description')?.invalid && expenseForm.get('description')?.touched"
+            class="text-xs text-red-500 mt-1">
+          Este campo es obligatorio
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Monto</label>
+        <input
+          type="number"
+          formControlName="amount"
+          placeholder="Ej. 10450"
+          class="w-full px-3 py-2 border border-ios-border rounded-xl text-sm bg-ios-input dark:bg-dark-input focus:outline-none focus:ring-2 focus:ring-ios-blue"
+        />
+        <div *ngIf="expenseForm.get('amount')?.invalid && expenseForm.get('amount')?.touched"
+            class="text-xs text-red-500 mt-1">
+          Ingresá un monto válido
+        </div>
+      </div>
+      <div class="flex justify-between pt-2">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="px-4 py-2 text-sm rounded-xl bg-ios-gray text-white hover:bg-ios-gray/80"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm rounded-xl bg-ios-blue text-white hover:bg-ios-blue/90"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

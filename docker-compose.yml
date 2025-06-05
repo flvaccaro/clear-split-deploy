@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./clear-split-back
+    container_name: clearsplit-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/clearsplit
+      - JWT_SECRET=clearsplitSuperSecretKey123
+    depends_on:
+      - mongo
+    networks:
+      - clearsplit-net
+
+  frontend:
+    build:
+      context: ./clear-split
+    container_name: clearsplit-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - clearsplit-net
+
+  mongo:
+    image: mongo
+    container_name: clearsplit-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - clearsplit-net
+
+volumes:
+  mongo_data:
+
+networks:
+  clearsplit-net:
+    driver: bridge

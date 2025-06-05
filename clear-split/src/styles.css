@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* light-mode por defecto */
+body {
+  @apply bg-ios-bg text-gray-900;
+}
+
+/* cuando la etiqueta <html> tenga la clase .dark */
+html.dark body {
+  @apply bg-dark-bg text-dark-text;
+}

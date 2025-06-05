@@ -1,0 +1,118 @@
+<div class="min-h-screen p-4 bg-ios-bg dark:bg-dark-bg">
+  <div class="max-w-md mx-auto space-y-6">
+    <!-- Add event button -->
+    <div class="text-center">
+      <button
+        class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
+        (click)="openAddEventModal()"
+      >
+        + Add event
+      </button>
+    </div>
+
+    <!-- Event list -->
+    <div *ngFor="let event of events">
+      <app-card [extraClasses]="'w-full mb-4'">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold">{{ event.title }}</h3>
+            <p class="text-sm text-ios-gray">{{ event.date }}</p>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <button
+              *ngIf="event.createdBy === currentUserId"
+              class="text-sm text-ios-blue"
+              (click)="editEvent(event)"
+            >
+              Edit
+            </button>
+            <button
+              *ngIf="event.createdBy === currentUserId"
+              class="text-sm text-red-500"
+              (click)="confirmDeleteEvent(event)"
+            >
+              Delete
+            </button>
+            <button
+              *ngIf="!event.participants.includes(currentUserId) && event.createdBy !== currentUserId"
+              class="text-sm text-ios-blue"
+              (click)="joinEvent(event)"
+            >
+              Participate
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <button [routerLink]="['/events', event._id]" class="text-xs underline">
+            View details
+          </button>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add event -->
+<div *ngIf="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg">
+    <h3 class="text-lg font-semibold mb-4 text-center">
+      {{ isEditing ? 'Edit Event' : 'New Event' }}
+    </h3>
+    <form [formGroup]="addEventForm" (ngSubmit)="saveEvent()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Event name</label>
+        <input
+          type="text"
+          formControlName="title"
+          class="w-full px-3 py-2 border rounded-xl text-sm
+                 bg-ios-input dark:bg-dark-input
+                 focus:outline-none focus:ring-2 focus:ring-ios-blue
+                 border-ios-border"
+        />
+        <div *ngIf="addEventForm.get('title')?.invalid && addEventForm.get('title')?.touched"
+             class="text-xs text-red-500 mt-1">
+          Event name is required
+        </div>
+      </div>
+
+      <div class="flex justify-between pt-2">
+        <button
+          type="button"
+          (click)="cancelAddEvent()"
+          class="px-4 py-2 text-sm rounded-xl bg-ios-gray text-white hover:bg-ios-gray/80"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm rounded-xl bg-ios-blue text-white hover:bg-ios-blue/90"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete confirmation modal -->
+<div *ngIf="showDeleteConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg text-center">
+    <h3 class="text-lg font-semibold mb-4">Are you sure you want to delete this event?</h3>
+    <div class="flex justify-between">
+      <button
+        (click)="cancelDelete()"
+        class="px-4 py-2 text-sm rounded-xl bg-ios-gray text-white hover:bg-ios-gray/80"
+      >
+        No
+      </button>
+      <button
+        (click)="deleteConfirmed()"
+        class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600"
+      >
+        Yes, delete
+      </button>
+    </div>
+  </div>
+</div>
