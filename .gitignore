@@ -1,1 +1,24 @@
+# Node dependencies
+clear-split/node_modules/
+clear-split-back/node_modules/
+
+# Angular/Nest build output
+clear-split/dist/
+clear-split-back/dist/
+
+# Local environment files
+clear-split/.env
+clear-split-back/.env
+
+# OS files
 .DS_Store
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Test coverage
+coverage/
