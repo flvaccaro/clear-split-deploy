@@ -83,6 +83,7 @@
       </div>
       <div class="flex justify-between items-center mt-6">
         <button
+          *ngIf="!eventFinalized"
           (click)="openModal()"
           class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
         >
@@ -90,7 +91,7 @@
         </button>
 
         <button
-          *ngIf="isOwner"
+          *ngIf="isOwner && !eventFinalized"
           (click)="finalizeEvent()"
           class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
         >
@@ -125,9 +126,10 @@
           </div>
         </div>
       </div>
-      <ng-container *ngIf="debtSummary.length > 0">
+      <ng-container *ngIf="debtSummary.length > 0 && isOwner">
         <div class="text-center mt-6">
           <button
+            *ngIf="eventFinalized"
             class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
             (click)="reopenEvent()"
           >

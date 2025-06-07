@@ -5,4 +5,5 @@ export const EventSchema = new Schema({
   date: { type: String, required: true },
   createdBy: { type: String, required: true }, // user ID
   participants: { type: [String], default: [] }, // array de user IDs
+  finalized: { type: Boolean, default: false }
 });

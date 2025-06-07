@@ -39,4 +39,12 @@ export class EventService {
   updateEvent(id: string, data: { title: string }) {
     return this.http.patch(`${this.apiUrl}/${id}`, data);
   }
+
+  finalizeEvent(eventId: string) {
+    return this.http.patch(`${this.apiUrl}/${eventId}/finalize`, {});
+  }
+
+  reopenEvent(eventId: string) {
+    return this.http.patch(`${this.apiUrl}/${eventId}/reopen`, {});
+  }
 }

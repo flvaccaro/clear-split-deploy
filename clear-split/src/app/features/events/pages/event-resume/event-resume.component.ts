@@ -15,7 +15,7 @@ import { ExpenseService } from '../../../expenses/expense.service';
   templateUrl: './event-resume.component.html'
 })
 export class EventResumeComponent {
-  eventId: string | null;
+  eventId: any;
   event: any = null;
 
   expenses: {
@@ -72,7 +72,12 @@ export class EventResumeComponent {
     if (this.eventId) {
       this.eventService.getEventById(this.eventId).subscribe(event => {
         this.event = event;
+        this.eventFinalized = event.finalized;
         this.isOwner = this.currentUser?.id === event.createdBy;
+        this.eventFinalized = event.finalized;
+        if (this.eventFinalized) {
+          this.calculateDebtSummary();
+        }
       });
     }
 
@@ -163,7 +168,11 @@ export class EventResumeComponent {
 
   finalizeEvent() {
     this.eventFinalized = true;
-    this.calculateDebtSummary();
+
+    this.eventService.finalizeEvent(this.eventId).subscribe(() => {
+      this.eventFinalized = true;
+      this.calculateDebtSummary();
+    });
   }
 
   calculateDebtSummary() {
@@ -179,9 +188,14 @@ export class EventResumeComponent {
   }
 
   reopenEvent() {
-    this.eventFinalized = false;
-    this.debtSummary = [];
+    if (!this.eventId) return;
+
+    this.eventService.reopenEvent(this.eventId).subscribe(() => {
+      this.eventFinalized = false;
+      this.debtSummary = [];
+    });
   }
+
 
   confirmDeleteExpense(expense: any) {
     this.expenseToDelete = expense;

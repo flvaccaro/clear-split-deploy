@@ -58,4 +58,16 @@ export class EventsController {
   async update(@Param('id') id: string, @Req() req, @Body() body: { title: string }) {
     return this.eventsService.updateEvent(id, req.user.sub, body.title);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/finalize')
+  finalize(@Param('id') id: string, @Req() req) {
+    return this.eventsService.finalizeEvent(id, req.user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/reopen')
+  reopen(@Param('id') id: string, @Req() req) {
+    return this.eventsService.reopenEvent(id, req.user.sub);
+  }
 }

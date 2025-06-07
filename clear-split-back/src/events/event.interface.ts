@@ -5,4 +5,5 @@ export interface Event extends Document {
   date: string;
   createdBy: string;
   participants: string[];
+  finalized: boolean;
 }

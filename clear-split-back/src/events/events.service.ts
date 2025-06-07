@@ -113,4 +113,23 @@ export class EventsService {
     event.title = newTitle;
     return event.save();
   }
+
+  async finalizeEvent(id: string, userId: string) {
+    const event = await this.eventModel.findById(id);
+    if (!event) throw new NotFoundException();
+    if (event.createdBy !== userId) throw new ForbiddenException();
+
+    event.finalized = true;
+    return event.save();
+  }
+
+  async reopenEvent(id: string, userId: string) {
+    const event = await this.eventModel.findById(id);
+    if (!event) throw new NotFoundException();
+    if (event.createdBy !== userId) throw new ForbiddenException();
+
+    event.finalized = false;
+    return event.save();
+  }
+
 }
