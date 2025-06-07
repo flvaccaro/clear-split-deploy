@@ -57,59 +57,62 @@
         </div>
         
       </div>
+      <div class="flex justify-between items-center mt-6">
+        <button
+          (click)="openModal()"
+          class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
+        >
+          + Agregar gasto
+        </button>
+
+        <button
+          *ngIf="isOwner"
+          (click)="finalizeEvent()"
+          class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
+        >
+          Finalizar evento
+        </button>
+      </div>
     </ng-container>
 
-    <div *ngIf="eventFinalized && debtSummary.length > 0" class="mt-8 space-y-4">
-      <h3 class="text-lg font-semibold text-center">Resumen de deudas</h3>
-
-      <div
-        *ngFor="let debt of debtSummary"
-        class="p-4 bg-white dark:bg-dark-card rounded-2xl shadow-card"
-      >
-        <p class="text-sm text-dark-text dark:text-white">
-          {{ debt.from.name }} le debe
-          <span class="font-semibold text-ios-blue">
-            {{ debt.amount | formattedAmount }}
-          </span>
-          a {{ debt.to.name }}
-        </p>
-        <div class="flex items-center gap-2 mt-1">
-          <p class="text-xs text-ios-gray">Alias: {{ debt.to.bankAlias }}</p>
-          <button
-            class="text-xs text-ios-blue underline"
-            (click)="copyToClipboard(debt.to.bankAlias)"
-          >
-            Copiar
-          </button>
+    <ng-container *ngIf="eventFinalized">
+      <div class="mt-8 space-y-4">
+        <h3 class="text-lg font-semibold text-center">Resumen de deudas</h3>
+  
+        <div
+          *ngFor="let debt of debtSummary"
+          class="p-4 bg-white dark:bg-dark-card rounded-2xl shadow-card"
+        >
+          <p class="text-sm text-dark-text dark:text-white">
+            {{ debt.from.name }} le debe
+            <span class="font-semibold text-ios-blue">
+              {{ debt.amount | formattedAmount }}
+            </span>
+            a {{ debt.to.name }}
+          </p>
+          <div class="flex items-center gap-2 mt-1">
+            <p class="text-xs text-ios-gray">Alias: {{ debt.to.bankAlias }}</p>
+            <button
+              class="text-xs text-ios-blue underline"
+              (click)="copyToClipboard(debt.to.bankAlias)"
+            >
+              Copiar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      <ng-container *ngIf="debtSummary.length > 0">
+        <div class="text-center mt-6">
+          <button
+            class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
+            (click)="reopenEvent()"
+          >
+            Reabrir evento
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
 
-    <div class="text-center mt-6" *ngIf="eventFinalized">
-      <button
-        class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
-        (click)="reopenEvent()"
-      >
-        Reabrir evento
-      </button>
-    </div>
-
-    <div class="flex justify-between items-center mt-6" *ngIf="!eventFinalized">
-      <button
-        (click)="openModal()"
-        class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
-      >
-        + Agregar gasto
-      </button>
-
-      <button
-        *ngIf="isOwner"
-        (click)="finalizeEvent()"
-        class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold text-sm shadow-md hover:bg-green-700"
-      >
-        Finalizar evento
-      </button>
-    </div>
   </div>
 </div>
 
