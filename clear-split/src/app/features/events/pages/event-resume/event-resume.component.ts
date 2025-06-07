@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -23,6 +23,7 @@ export class EventResumeComponent {
     amount: number;
     user: string;
     createdBy: string;
+    id: string;
   }[] = [];
 
   showModal = false;
@@ -45,6 +46,8 @@ export class EventResumeComponent {
 
   expenseToDelete: any = null;
   showDeleteExpenseModal = false;
+
+  openActionMenuId: string | null = null;
 
   constructor(
     private expenseService: ExpenseService,
@@ -199,5 +202,21 @@ export class EventResumeComponent {
         this.loadExpenses();
         this.cancelDeleteExpense();
       });
+  }
+
+  toggleActionMenu(expenseId: string) {
+    this.openActionMenuId = this.openActionMenuId === expenseId ? null : expenseId;
+  }
+
+  closeActionMenu() {
+    this.openActionMenuId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.relative')) {
+      this.closeActionMenu();
+    }
   }
 }

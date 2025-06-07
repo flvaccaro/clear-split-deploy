@@ -47,20 +47,37 @@
           <div class="text-right font-semibold text-ios-blue">
             {{ expense.amount | formattedAmount }}
           </div>
-          <a
-            *ngIf="expense.createdBy === currentUser?.id"
-              class="text-xs text-ios-blue ml-2 underline"
-              (click)="editExpense(expense)"
-            >
-              Editar
-          </a>
-          <a
-            *ngIf="expense.createdBy === currentUser?.id"
-              class="text-xs text-red-500 ml-2 underline"
-              (click)="confirmDeleteExpense(expense)"
-            >
-              Borrar
-          </a>
+          <!-- options -->
+          <ng-container *ngIf="currentUser?.id === expense.createdBy">
+            <div class="relative">
+              <button
+                (click)="toggleActionMenu(expense.id)"
+                class="text-lg text-ios-blue font-bold focus:outline-none"
+              >
+                ⋮
+              </button>
+              <!-- Dropdown -->
+              <div
+                *ngIf="openActionMenuId === expense.id"
+                class="absolute right-0 mt-2 w-28 bg-white dark:bg-dark-card rounded-xl shadow-card z-10"
+              >
+                <button
+                  (click)="editExpense(expense); closeActionMenu()"
+                  class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-input"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="confirmDeleteExpense(expense); closeActionMenu()"
+                  class="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-dark-input"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+
         </div>
         
       </div>
