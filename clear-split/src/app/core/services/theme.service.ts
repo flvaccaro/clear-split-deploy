@@ -5,7 +5,13 @@ export class ThemeService {
   private storageKey = 'clearSplit_theme';
 
   constructor() {
-    this.loadTheme();
+    //this.loadTheme();
+    this.setDarkMode(); // TODO remove this, and implement a toggle in the UI
+  }
+
+  private setDarkMode() {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('clearSplit_theme', 'dark');
   }
 
   toggle() {
