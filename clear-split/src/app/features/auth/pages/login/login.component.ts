@@ -53,8 +53,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.authService.login(email, password).subscribe({
       next: () => {
         this.isSubmitting = false;
-        // Redirige al listado de eventos (o donde definas)
-        console.log('Login correcto');
         this.router.navigate(['/events']);
       },
       error: (err) => {

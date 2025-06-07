@@ -1,15 +1,5 @@
 <div class="min-h-screen p-4 bg-ios-bg dark:bg-dark-bg">
   <div class="max-w-md mx-auto space-y-6">
-    <!-- Add event button -->
-    <div class="text-center">
-      <button
-        class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
-        (click)="openAddEventModal()"
-      >
-        + Add event
-      </button>
-    </div>
-
     <!-- Event list -->
     <div *ngFor="let event of events">
       <app-card [extraClasses]="'w-full mb-4'">
@@ -50,6 +40,14 @@
           </button>
         </div>
       </app-card>
+    </div>
+    <div class="flex justify-end mt-6">
+      <button
+        class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
+        (click)="openAddEventModal()"
+      >
+        + Add event
+      </button>
     </div>
   </div>
 </div>

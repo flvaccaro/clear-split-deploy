@@ -8,7 +8,6 @@ export class AuthStateService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      console.log('Payload:', payload);
       return {
         email: payload.email,
         id: payload.sub,

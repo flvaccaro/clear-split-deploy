@@ -65,7 +65,6 @@ export class SignupComponent implements OnInit {
     const bankAlias = this.signupForm.controls.bankAlias.value!;
     const name = this.signupForm.controls.name.value!;
 
-    console.log('Signup', { email, password, bankAlias, name });
     this.authService.signup(email, password, bankAlias, name)
     .subscribe({
       next: () => {

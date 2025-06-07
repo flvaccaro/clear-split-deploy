@@ -61,7 +61,6 @@ export class EventResumeComponent {
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-      console.log('Current user:', this.currentUser);
     });
 
     if (this.eventId) {
@@ -147,7 +146,6 @@ export class EventResumeComponent {
 
     this.eventService.getParticipants(this.eventId).subscribe((data) => {
       this.participants = data;
-      console.log('Participants:', this.participants);
       this.showParticipantsModal = true;
     });
   }
