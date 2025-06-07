@@ -13,6 +13,7 @@
   <!-- Right: logout -->
   <div>
     <button
+      *ngIf="showLogoutButton"
       (click)="logout()"
       class="text-sm text-red-500 font-medium hover:underline"
     >

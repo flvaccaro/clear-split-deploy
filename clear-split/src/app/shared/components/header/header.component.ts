@@ -12,7 +12,8 @@ import { filter } from 'rxjs';
 })
 export class HeaderComponent {
   showBackButton = false;
-  
+  showLogoutButton = false;
+
   constructor(public theme: ThemeService, private auth: AuthService, private router: Router, private location: Location) {
    this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
@@ -21,6 +22,13 @@ export class HeaderComponent {
       this.showBackButton = !(
         url === '/auth/login' || url === '/events'
       );
+    });
+
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.showLogoutButton = !(url === '/auth/login');
     });
   }
 
