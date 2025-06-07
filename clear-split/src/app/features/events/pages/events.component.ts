@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthStateService } from '../../../core/services/auth-state.service';
@@ -22,6 +22,8 @@ export class EventsComponent implements OnInit {
   eventToDelete: any = null;
 
   events: any[] = []; // This should ideally be typed with an Event interface
+
+  openEventMenuId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -132,5 +134,21 @@ export class EventsComponent implements OnInit {
         this.cancelDelete();
       }
     });
+  }
+
+  toggleEventActionMenu(eventId: string) {
+    this.openEventMenuId = this.openEventMenuId === eventId ? null : eventId;
+  }
+
+  closeEventActionMenu() {
+    this.openEventMenuId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.relative')) {
+      this.closeEventActionMenu();
+    }
   }
 }

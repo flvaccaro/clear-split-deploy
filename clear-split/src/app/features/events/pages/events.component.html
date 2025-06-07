@@ -10,33 +10,50 @@
           </div>
 
           <div class="flex gap-2 items-center">
-            <button
-              *ngIf="event.createdBy === currentUserId"
-              class="text-sm text-ios-blue"
-              (click)="editEvent(event)"
-            >
-              Edit
-            </button>
-            <button
-              *ngIf="event.createdBy === currentUserId"
-              class="text-sm text-red-500"
-              (click)="confirmDeleteEvent(event)"
-            >
-              Delete
-            </button>
+            <!-- Botón de menú ⋮ solo para el creador -->
+            <div *ngIf="event.createdBy === currentUserId" class="relative">
+              <button
+                (click)="toggleEventActionMenu(event.id)"
+                class="text-lg text-ios-blue font-bold focus:outline-none"
+              >
+                ⋮
+              </button>
+
+              <!-- Menú contextual -->
+              <div
+                *ngIf="openEventMenuId === event.id"
+                class="absolute right-0 mt-2 w-28 bg-white dark:bg-dark-card rounded-xl shadow-card z-10"
+              >
+                <button
+                  (click)="editEvent(event); closeEventActionMenu()"
+                  class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-input"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="confirmDeleteEvent(event); closeEventActionMenu()"
+                  class="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-dark-input"
+                >
+                  Borrar
+                </button>
+              </div>
+            </div>
+
+            <!-- Participar si no es parte -->
             <button
               *ngIf="!event.participants.includes(currentUserId) && event.createdBy !== currentUserId"
               class="text-sm text-ios-blue"
               (click)="joinEvent(event)"
             >
-              Participate
+              Unirme
             </button>
           </div>
+
         </div>
 
         <div class="mt-2">
           <button [routerLink]="['/events', event._id]" class="text-xs underline">
-            View details
+            Detalles
           </button>
         </div>
       </app-card>
@@ -46,7 +63,7 @@
         class="px-4 py-2 rounded-xl bg-ios-blue text-white font-semibold text-sm shadow-md hover:bg-ios-blue/90"
         (click)="openAddEventModal()"
       >
-        + Add event
+        + Agregar evento
       </button>
     </div>
   </div>
@@ -56,11 +73,11 @@
 <div *ngIf="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
   <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg">
     <h3 class="text-lg font-semibold mb-4 text-center">
-      {{ isEditing ? 'Edit Event' : 'New Event' }}
+      {{ isEditing ? 'Editar evento' : 'Nuevo evento' }}
     </h3>
     <form [formGroup]="addEventForm" (ngSubmit)="saveEvent()" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium mb-1">Event name</label>
+        <label class="block text-sm font-medium mb-1">Nombre del evento</label>
         <input
           type="text"
           formControlName="title"
@@ -71,7 +88,7 @@
         />
         <div *ngIf="addEventForm.get('title')?.invalid && addEventForm.get('title')?.touched"
              class="text-xs text-red-500 mt-1">
-          Event name is required
+          El nombre del evento es obligatorio
         </div>
       </div>
 
@@ -81,13 +98,13 @@
           (click)="cancelAddEvent()"
           class="px-4 py-2 text-sm rounded-xl bg-ios-gray text-white hover:bg-ios-gray/80"
         >
-          Cancel
+          Cancelar
         </button>
         <button
           type="submit"
           class="px-4 py-2 text-sm rounded-xl bg-ios-blue text-white hover:bg-ios-blue/90"
         >
-          Save
+          Guardar
         </button>
       </div>
     </form>
@@ -97,7 +114,7 @@
 <!-- Delete confirmation modal -->
 <div *ngIf="showDeleteConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
   <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg text-center">
-    <h3 class="text-lg font-semibold mb-4">Are you sure you want to delete this event?</h3>
+    <h3 class="text-lg font-semibold mb-4">¿Estás seguro que querés eliminar este evento?</h3>
     <div class="flex justify-between">
       <button
         (click)="cancelDelete()"
@@ -109,7 +126,7 @@
         (click)="deleteConfirmed()"
         class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600"
       >
-        Yes, delete
+        Si, borrar
       </button>
     </div>
   </div>
