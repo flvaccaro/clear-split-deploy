@@ -35,8 +35,18 @@ export class EventsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.eventService.getAllEvents().subscribe(events => {
+    //   this.events = events;
+    // });
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
     this.eventService.getAllEvents().subscribe(events => {
-      this.events = events;
+      this.events = events.map(e => ({
+        ...e,
+        id: e._id || e.id, // aseguramos tener id para routerLink
+      }));
     });
   }
 
@@ -49,7 +59,7 @@ export class EventsComponent implements OnInit {
 
   editEvent(event: any) {
     this.isEditing = true;
-    this.editingEventId = event.id;
+    this.editingEventId = event._id;
     this.addEventForm.patchValue({
       title: event.title,
     });
@@ -86,7 +96,12 @@ export class EventsComponent implements OnInit {
     const title = this.addEventForm.value.title;
 
     if (this.isEditing && this.editingEventId) {
-      // skip: backend edit not implemented yet
+      this.eventService.updateEvent(this.editingEventId, { title }).subscribe(() => {
+        this.loadEvents();
+        this.showAddModal = false;
+        this.isEditing = false;
+        this.editingEventId = null;
+      });
     } else {
       this.eventService.createEvent(title).subscribe(newEvent => {
         this.events.push(newEvent);

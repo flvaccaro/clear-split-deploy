@@ -47,9 +47,15 @@ export class EventsController {
     return this.eventsService.addParticipant(id, req.user.sub);
   }
 
-    @UseGuards(JwtAuthGuard)
-    @Get(':id/settlement')
-    async getSettlement(@Param('id') eventId: string) {
-      return this.eventsService.calculateSettlement(eventId);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/settlement')
+  async getSettlement(@Param('id') eventId: string) {
+    return this.eventsService.calculateSettlement(eventId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async update(@Param('id') id: string, @Req() req, @Body() body: { title: string }) {
+    return this.eventsService.updateEvent(id, req.user.sub, body.title);
+  }
 }

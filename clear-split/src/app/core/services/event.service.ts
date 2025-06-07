@@ -35,4 +35,8 @@ export class EventService {
   getSettlement(eventId: string) {
     return this.http.get<any[]>(`${this.apiUrl}/${eventId}/settlement`);
   }
+
+  updateEvent(id: string, data: { title: string }) {
+    return this.http.patch(`${this.apiUrl}/${id}`, data);
+  }
 }

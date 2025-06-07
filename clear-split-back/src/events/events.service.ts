@@ -101,4 +101,16 @@ export class EventsService {
 
     return result;
   }
+
+  async updateEvent(eventId: string, userId: string, newTitle: string) {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) throw new NotFoundException('Event not found');
+
+    if (event.createdBy !== userId) {
+      throw new ForbiddenException('You can only edit your own events');
+    }
+
+    event.title = newTitle;
+    return event.save();
+  }
 }
