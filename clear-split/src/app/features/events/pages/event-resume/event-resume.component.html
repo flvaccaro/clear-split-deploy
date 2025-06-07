@@ -51,14 +51,14 @@
           <ng-container *ngIf="currentUser?.id === expense.createdBy">
             <div class="relative">
               <button
-                (click)="toggleActionMenu(expense.id)"
+                (click)="toggleActionMenu(expense._id)"
                 class="text-lg text-ios-blue font-bold focus:outline-none"
               >
                 ⋮
               </button>
               <!-- Dropdown -->
               <div
-                *ngIf="openActionMenuId === expense.id"
+                *ngIf="openActionMenuId === expense._id"
                 class="absolute right-0 mt-2 w-28 bg-white dark:bg-dark-card rounded-xl shadow-card z-10"
               >
                 <button

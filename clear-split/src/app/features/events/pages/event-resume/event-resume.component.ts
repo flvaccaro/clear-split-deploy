@@ -24,6 +24,7 @@ export class EventResumeComponent {
     user: string;
     createdBy: string;
     id: string;
+    _id: string;
   }[] = [];
 
   showModal = false;
