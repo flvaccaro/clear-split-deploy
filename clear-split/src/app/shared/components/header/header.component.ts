@@ -28,7 +28,7 @@ export class HeaderComponent {
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: any) => {
       const url = event.urlAfterRedirects;
-      this.showLogoutButton = !(url === '/auth/login');
+      this.showLogoutButton = !(url === '/auth/login') && !(url === '/auth/signup');
     });
   }
 
