@@ -43,6 +43,9 @@ export class EventResumeComponent {
 
   debtSummary: any[] = [];
 
+  expenseToDelete: any = null;
+  showDeleteExpenseModal = false;
+
   constructor(
     private expenseService: ExpenseService,
     private eventService: EventService,
@@ -175,5 +178,26 @@ export class EventResumeComponent {
   reopenEvent() {
     this.eventFinalized = false;
     this.debtSummary = [];
+  }
+
+  confirmDeleteExpense(expense: any) {
+    this.expenseToDelete = expense;
+    this.showDeleteExpenseModal = true;
+  }
+
+  cancelDeleteExpense() {
+    this.expenseToDelete = null;
+    this.showDeleteExpenseModal = false;
+  }
+
+  deleteExpenseConfirmed() {
+    if (!this.eventId || !this.expenseToDelete) return;
+
+    this.expenseService
+      .delete(this.eventId, this.expenseToDelete._id)
+      .subscribe(() => {
+        this.loadExpenses();
+        this.cancelDeleteExpense();
+      });
   }
 }

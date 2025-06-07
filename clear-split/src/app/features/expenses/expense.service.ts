@@ -19,4 +19,8 @@ export class ExpenseService {
   updateExpense(eventId: string, expenseId: string, data: { amount: number; description: string }) {
     return this.http.patch(`${this.apiUrl}/events/${eventId}/expenses/${expenseId}`, data);
   }
+
+  delete(eventId: string, expenseId: string) {
+    return this.http.delete(`${this.apiUrl}/events/${eventId}/expenses/${expenseId}`);
+  }
 }

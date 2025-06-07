@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, UseGuards, Req, Patch } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, UseGuards, Req, Patch, Delete } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -33,5 +33,11 @@ export class ExpensesController {
       amount: body.amount,
       description: body.description,
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':expenseId')
+  delete(@Param('eventId') eventId: string, @Param('expenseId') expenseId: string, @Req() req) {
+    return this.expensesService.deleteExpense(expenseId, req.user.sub);
   }
 }

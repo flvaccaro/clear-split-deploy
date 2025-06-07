@@ -27,4 +27,12 @@ export class ExpensesService {
     expense.description = update.description;
     return expense.save();
   }
+
+  async deleteExpense(expenseId: string, userId: string) {
+    const expense = await this.expenseModel.findById(expenseId);
+    if (!expense) throw new NotFoundException('Expense not found');
+    if (expense.createdBy !== userId) throw new ForbiddenException('You can only delete your own expenses');
+
+    return this.expenseModel.findByIdAndDelete(expenseId);
+  }
 }

@@ -48,12 +48,19 @@
             {{ expense.amount | formattedAmount }}
           </div>
           <a
-          *ngIf="expense.createdBy === currentUser?.id"
-            class="text-xs text-ios-blue ml-2 underline"
-            (click)="editExpense(expense)"
-          >
-            Editar
-        </a>
+            *ngIf="expense.createdBy === currentUser?.id"
+              class="text-xs text-ios-blue ml-2 underline"
+              (click)="editExpense(expense)"
+            >
+              Editar
+          </a>
+          <a
+            *ngIf="expense.createdBy === currentUser?.id"
+              class="text-xs text-red-500 ml-2 underline"
+              (click)="confirmDeleteExpense(expense)"
+            >
+              Borrar
+          </a>
         </div>
         
       </div>
@@ -166,3 +173,25 @@
     </form>
   </div>
 </div>
+
+<!-- Delete expense confirmation modal -->
+<div *ngIf="showDeleteExpenseModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white dark:bg-dark-card rounded-2xl p-6 w-full max-w-sm shadow-lg text-center">
+    <h3 class="text-lg font-semibold mb-4">¿Estás seguro de eliminar este gasto?</h3>
+    <div class="flex justify-between">
+      <button
+        (click)="cancelDeleteExpense()"
+        class="px-4 py-2 text-sm rounded-xl bg-ios-gray text-white hover:bg-ios-gray/80"
+      >
+        No
+      </button>
+      <button
+        (click)="deleteExpenseConfirmed()"
+        class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600"
+      >
+        Sí, eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
